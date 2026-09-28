@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stomata Hour — Frank Dixon</title>
+  <meta name="description" content="A teaching simulator of stomatal aperture: watch guard cells open and close with light, CO₂, and drought cues." />
+  <meta name="theme-color" content="#1f6b45" />
+  <meta name="color-scheme" content="dark" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/stomata-hour.css" />
+</head>
+<body class="bg-leaf text-ink">
+  <!-- Hub masthead -->
+  <header class="border-b border-white/[0.06] bg-leaf/90 backdrop-blur-md sticky top-0 z-40">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
+      <a href="https://frank-dixon.github.io/" class="font-hub text-[13px] font-semibold tracking-brand text-ink uppercase hover:text-stomata-soft transition-colors duration-300">Frank Dixon.</a>
+      <nav class="flex flex-wrap items-center gap-x-5 gap-y-1 text-[11px] font-medium uppercase tracking-wide2 text-mist" aria-label="Portfolio">
+        <a href="https://frank-dixon.github.io/#about" class="hover:text-ink transition-colors">About</a>
+        <a href="https://frank-dixon.github.io/#work" class="hover:text-ink transition-colors">Work</a>
+        <a href="https://frank-dixon.github.io/#projects" class="hover:text-ink transition-colors">Projects</a>
+        <a href="https://frank-dixon.github.io/#contact" class="hover:text-ink transition-colors">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-5 pb-24 pt-10 sm:px-8 sm:pt-14">
+    <!-- Title block -->
+    <div class="mb-10 max-w-2xl animate-fade-up">
+      <p class="mb-3 font-mono text-[11px] uppercase tracking-wide2 text-stomata-soft">Teaching simulator · plant physiology</p>
+      <h1 class="font-display text-4xl font-semibold leading-tight text-ink sm:text-5xl md:text-[3.25rem]">Stomata Hour</h1>
+      <p class="mt-4 text-[15px] font-light leading-relaxed text-mist max-w-xl">
+        Guard cells meter the leaf’s pores. Drag light, carbon dioxide, and drought, and watch the aperture answer in real time—a didactic model of opening and closure, not a research-grade biophysics engine.
+      </p>
+    </div>
+
+    <!-- Mode toggle -->
+    <div class="mb-6 flex flex-wrap items-center gap-3" role="group" aria-label="Interface mode">
+      <span class="font-mono text-[10px] uppercase tracking-wide2 text-mist-dim">Mode</span>
+      <div class="inline-flex rounded-full border border-white/[0.1] bg-leaf-elev p-1">
+        <button type="button" id="mode-simple" class="mode-btn on rounded-full border border-transparent px-4 py-1.5 text-[12px] font-medium tracking-wide transition-all duration-300" aria-pressed="true">Simple</button>
+        <button type="button" id="mode-advanced" class="mode-btn rounded-full border border-transparent px-4 py-1.5 text-[12px] font-medium tracking-wide text-mist hover:text-ink transition-all duration-300" aria-pressed="false">Advanced</button>
+      </div>
+    </div>
+
+    <!-- Viz + controls grid -->
+    <div class="grid gap-6 lg:grid-cols-5 lg:gap-8">
+      <!-- Canvas stage -->
+      <section class="lg:col-span-3 viz-stage aspect-[4/3] sm:aspect-[16/11]" aria-label="Stomatal pore visualization">
+        <canvas id="stomata-canvas" class="absolute inset-0 h-full w-full" role="img" aria-label="Animated epidermal pore with two guard cells"></canvas>
+      </section>
+
+      <!-- Controls -->
+      <aside class="lg:col-span-2 flex flex-col gap-5 rounded-2xl border border-white/[0.08] bg-leaf-panel p-5 sm:p-6 backdrop-blur-sm">
+        <h2 class="font-display text-xl font-semibold text-ink">Cues</h2>
+
+        <label class="block space-y-2">
+          <div class="flex items-baseline justify-between gap-2">
+            <span class="text-[13px] font-medium text-ink">Light</span>
+            <span id="label-light" class="font-mono text-[11px] text-light">65%</span>
+          </div>
+          <input id="ctrl-light" class="slider-track" type="range" min="0" max="100" value="65" aria-valuemin="0" aria-valuemax="100" />
+          <p class="text-[12px] leading-snug text-mist-dim">Blue-light phototropin cue opens the pore as irradiance rises.</p>
+        </label>
+
+        <label class="block space-y-2">
+          <div class="flex items-baseline justify-between gap-2">
+            <span class="text-[13px] font-medium text-ink">Carbon dioxide</span>
+            <span id="label-co2" class="font-mono text-[11px] text-co2">420 ppm</span>
+          </div>
+          <input id="ctrl-co2" class="slider-track accent-co2" type="range" min="280" max="800" value="420" aria-valuemin="280" aria-valuemax="800" />
+          <p class="text-[12px] leading-snug text-mist-dim">Higher CO₂ favors closure once photosynthetic demand is met.</p>
+        </label>
+
+        <label class="block space-y-2">
+          <div class="flex items-baseline justify-between gap-2">
+            <span class="text-[13px] font-medium text-ink">Drought / ABA</span>
+            <span id="label-drought" class="font-mono text-[11px] text-drought">15%</span>
+          </div>
+          <input id="ctrl-drought" class="slider-track accent-drought" type="range" min="0" max="100" value="15" aria-valuemin="0" aria-valuemax="100" />
+          <p class="text-[12px] leading-snug text-mist-dim">Abscisic acid rises with water stress and drives stomatal closure.</p>
+        </label>
+      </aside>
+    </div>
+
+    <!-- Advanced panel -->
+    <section id="advanced-panel" class="mt-6 hidden animate-panel-in rounded-2xl border border-stomata/30 bg-leaf-elev/80 p-5 sm:p-6" aria-hidden="true" aria-label="Advanced readouts">
+      <h2 class="mb-4 font-display text-xl font-semibold text-ink">Advanced readouts</h2>
+      <p class="mb-5 text-[13px] leading-relaxed text-mist">These meters are teaching proxies derived from the same weighted cues—useful for talking through signal logic, not for publishing kinetics.</p>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-[12px]"><span class="text-mist">Aperture index</span><span id="val-aperture" class="font-mono text-stomata-soft">0.00</span></div>
+          <div class="h-1.5 overflow-hidden rounded-full bg-white/[0.06]"><div id="meter-aperture" class="h-full rounded-full bg-stomata-bright transition-[width] duration-300 ease-stomata" style="width:0%"></div></div>
+        </div>
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-[12px]"><span class="text-mist">Guard-cell turgor</span><span id="val-turgor" class="font-mono text-stomata-soft">0.00</span></div>
+          <div class="h-1.5 overflow-hidden rounded-full bg-white/[0.06]"><div id="meter-turgor" class="h-full rounded-full bg-guard-edge transition-[width] duration-300 ease-stomata" style="width:0%"></div></div>
+        </div>
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-[12px]"><span class="text-mist">Phototropin cue</span><span id="val-photo" class="font-mono text-light-blue">0.00</span></div>
+          <div class="h-1.5 overflow-hidden rounded-full bg-white/[0.06]"><div id="meter-photo" class="h-full rounded-full bg-light-blue transition-[width] duration-300 ease-stomata" style="width:0%"></div></div>
+        </div>
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-[12px]"><span class="text-mist">ABA signal</span><span id="val-aba" class="font-mono text-drought">0.00</span></div>
+          <div class="h-1.5 overflow-hidden rounded-full bg-white/[0.06]"><div id="meter-aba" class="h-full rounded-full bg-drought transition-[width] duration-300 ease-stomata" style="width:0%"></div></div>
+        </div>
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-[12px]"><span class="text-mist">CO₂</span><span id="val-co2" class="font-mono text-co2">420 ppm</span></div>
+          <div class="h-1.5 overflow-hidden rounded-full bg-white/[0.06]"><div class="h-full w-full rounded-full bg-co2/40"></div></div>
+        </div>
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-[12px]"><span class="text-mist">Soil moisture proxy</span><span id="val-soil" class="font-mono text-mist">85%</span></div>
+          <div class="h-1.5 overflow-hidden rounded-full bg-white/[0.06]"><div id="meter-soil" class="h-full rounded-full bg-mist transition-[width] duration-300 ease-stomata" style="width:0%"></div></div>
+        </div>
+        <div class="space-y-1.5 sm:col-span-2 lg:col-span-1">
+          <div class="flex justify-between text-[12px]"><span class="text-mist">VPD proxy</span><span id="val-vpd" class="font-mono text-drought-soft">0.00</span></div>
+          <div class="h-1.5 overflow-hidden rounded-full bg-white/[0.06]"><div id="meter-vpd" class="h-full rounded-full bg-drought-soft transition-[width] duration-300 ease-stomata" style="width:0%"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live explanation -->
+    <section class="copy-panel mt-8 rounded-2xl border border-white/[0.08] bg-leaf-panel p-5 sm:p-7" aria-live="polite">
+      <h2 class="mb-3 font-display text-xl font-semibold text-ink">What the leaf is doing</h2>
+      <p id="live-copy" class="text-[15px] font-light leading-relaxed text-mist">
+        The stomatal pore is adjusting to the cues you set. Raise light to open, raise CO₂ or drought to close, and read the sentence trail as the aperture settles.
+      </p>
+    </section>
+
+    <!-- Pedagogy -->
+    <section class="mt-14 grid gap-8 md:grid-cols-2">
+      <div>
+        <h2 class="mb-3 font-display text-2xl font-semibold text-ink">Why stomata matter</h2>
+        <p class="text-[14px] font-light leading-relaxed text-mist">
+          Every green leaf hosts thousands of microscopic mouths. When guard cells swell with turgor, the pore opens and CO₂ floods in for photosynthesis—while water vapor escapes. When they lose turgor, the pore narrows, trading carbon gain for hydraulic safety. Light, CO₂, and the drought hormone ABA are three of the classic levers on that bargain.
+        </p>
+      </div>
+      <div>
+        <h2 class="mb-3 font-display text-2xl font-semibold text-ink">How this model works</h2>
+        <p class="text-[14px] font-light leading-relaxed text-mist">
+          Stomata Hour blends those cues with fixed teaching weights, then lerps the drawn aperture toward the result each frame. Advanced mode surfaces proxies for phototropin drive, ABA, turgor, soil moisture, and vapor-pressure deficit so you can narrate the same story with more dials visible. Nothing here replaces a laboratory assay.
+        </p>
+      </div>
+    </section>
+
+    <!-- References -->
+    <section id="references" class="mt-16 border-t border-white/[0.06] pt-10">
+      <h2 class="mb-5 font-display text-2xl font-semibold text-ink">References</h2>
+      <ul class="space-y-4 text-[13px] font-light leading-relaxed text-mist">
+        <li>
+          <span class="text-ink/90">Schroeder JI, Allen GJ, Hugouvieux V, Kwak JM, Waner D.</span>
+          Guard cell signal transduction.
+          <em class="text-mist">Annu Rev Plant Physiol Plant Mol Biol.</em> 2001;52:627–658.
+        </li>
+        <li>
+          <span class="text-ink/90">Assmann SM, Shimazaki K.</span>
+          The multisensory guard cell. Stomatal responses to blue light and abscisic acid.
+          <em class="text-mist">Plant Physiol.</em> 1999;119(3):809–816.
+        </li>
+        <li>
+          <span class="text-ink/90">Assmann SM.</span>
+          Signal transduction in guard cells.
+          <em class="text-mist">Annu Rev Cell Biol.</em> 1993;9:345–375.
+        </li>
+        <li>
+          <span class="text-ink/90">Outlaw WH Jr.</span>
+          Integration of cellular and physiological functions of guard cells.
+          <em class="text-mist">Crit Rev Plant Sci.</em> 2003;22(6):503–529.
+        </li>
+        <li>
+          <span class="text-ink/90">Mott KA.</span>
+          Opinion: Stomatal responses to light and CO₂ depend on the mesophyll.
+          <em class="text-mist">Plant Cell Environ.</em> 2009;32(11):1479–1486.
+        </li>
+        <li>
+          <span class="text-ink/90">Cutler SR, Rodriguez PL, Finkelstein RR, Abrams SR.</span>
+          Abscisic acid: emergence of a core signaling network.
+          <em class="text-mist">Annu Rev Plant Biol.</em> 2010;61:651–679.
+        </li>
+        <li>
+          <span class="text-ink/90">Finkelstein R.</span>
+          Abscisic acid synthesis and response.
+          <em class="text-mist">Arabidopsis Book.</em> 2013;11:e0166.
+        </li>
+      </ul>
+      <p class="mt-6 text-[12px] text-mist-dim">
+        Citations are provided for teaching context. Verify details against the publisher of record before formal scholarship.
+      </p>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/[0.06] py-8 text-center">
+    <p class="font-mono text-[10px] uppercase tracking-wide2 text-mist-dim">Stomata Hour · Frank Dixon · teaching model</p>
+  </footer>
+
+  <script src="./js/app.js" defer></script>
+</body>
+</html>

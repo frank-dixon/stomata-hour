@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  body {
+    @apply m-0 min-h-full bg-leaf text-ink font-sans text-[15px] font-light antialiased;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-stomata-soft;
+  }
+}
+
+@layer components {
+  .mode-btn.on {
+    @apply bg-stomata-deep text-ink border-stomata-bright/50;
+  }
+  .viz-stage {
+    @apply relative overflow-hidden rounded-2xl border border-white/[0.08] bg-leaf-elev;
+    box-shadow: inset 0 0 60px rgba(19, 72, 48, 0.45);
+  }
+  .copy-panel {
+    @apply animate-fade-up;
+  }
+  .slider-track {
+    @apply w-full accent-stomata-bright;
+  }
+}
+
+@layer utilities {
+  .duration-600 {
+    transition-duration: 600ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy-panel,
+  .viz-stage canvas {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
