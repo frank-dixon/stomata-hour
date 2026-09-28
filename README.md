@@ -4,6 +4,8 @@ A teaching simulator of **stomatal aperture**: two guard cells open and close a 
 
 This is a didactic weighted-cue model with smooth canvas animation—not a research-grade biophysics engine.
 
+**Live:** [https://frank-dixon.github.io/stomata-hour/](https://frank-dixon.github.io/stomata-hour/)
+
 ## Develop
 
 ```bash
@@ -36,4 +38,4 @@ That minifies Tailwind → `docs/css/stomata-hour.css` and esbuild-minifies `src
 
 ## Deploy
 
-GitHub Pages is **not** enabled on this repo. Deploy or ship only when Frank explicitly asks.
+GitHub Pages serves `docs/` from `main`: [https://frank-dixon.github.io/stomata-hour/](https://frank-dixon.github.io/stomata-hour/).
