@@ -1,4 +1,4 @@
-/** Stomata Hour — leaf / guard-cell palette */
+/** Stomata Hour — cream / paper portfolio palette */
 module.exports = {
   content: [
     "./docs/**/*.{html,js}",
@@ -7,41 +7,47 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        leaf: "#0a1410",
-        "leaf-elev": "#102018",
-        "leaf-panel": "rgba(10, 28, 20, 0.86)",
+        leaf: "#F7F3EA",
+        "leaf-elev": "#FBF8F1",
+        "leaf-panel": "rgba(255, 252, 245, 0.92)",
         stomata: {
-          DEFAULT: "#1f6b45",
-          deep: "#134830",
-          bright: "#2f9a62",
-          soft: "#4bb87a",
+          DEFAULT: "#0B8A8F",
+          deep: "#0A6F73",
+          bright: "#12A3A9",
+          soft: "#3BB5BA",
         },
         guard: {
-          DEFAULT: "#2a5c40",
-          edge: "#3d7a56",
+          DEFAULT: "#2F7A5C",
+          edge: "#3D9470",
         },
         pore: {
-          DEFAULT: "#0c1a14",
-          open: "#06100c",
+          DEFAULT: "#3A4A42",
+          open: "#2A3530",
         },
         drought: {
-          DEFAULT: "#c4784a",
-          soft: "#a05a32",
+          DEFAULT: "#B86A3A",
+          soft: "#C88458",
         },
         co2: {
-          DEFAULT: "#6b8fad",
-          soft: "#4a6d88",
+          DEFAULT: "#4A7190",
+          soft: "#6A8FA8",
         },
         light: {
-          DEFAULT: "#e8c84a",
-          soft: "#c4a63a",
-          blue: "#6b9fd7",
+          DEFAULT: "#B8942E",
+          soft: "#C9A84A",
+          blue: "#4A7EB8",
         },
         mist: {
-          DEFAULT: "#9ab5a8",
-          dim: "#5a7468",
+          DEFAULT: "#5A6560",
+          dim: "#7A8580",
         },
-        ink: "#e6f0ea",
+        ink: "#1A1F24",
+        paper: {
+          DEFAULT: "#F7F3EA",
+          warm: "#F0E8D8",
+          cool: "#F5F2EB",
+          line: "rgba(26, 31, 36, 0.12)",
+        },
       },
       fontFamily: {
         sans: ['"IBM Plex Sans"', "system-ui", "sans-serif"],

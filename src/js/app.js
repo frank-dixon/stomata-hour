@@ -260,7 +260,7 @@
     ctx.save();
     ctx.translate(cx + ox, cy);
 
-    // Outer lobe
+    // Outer lobe — soft botanical green on paper
     ctx.beginPath();
     ctx.ellipse(side * rx * 0.15, 0, rx, ry, 0, 0, Math.PI * 2);
     var grad = ctx.createRadialGradient(
@@ -271,23 +271,23 @@
       0,
       rx
     );
-    grad.addColorStop(0, '#4bb87a');
-    grad.addColorStop(0.45, '#2a5c40');
-    grad.addColorStop(1, '#134830');
+    grad.addColorStop(0, '#6BC48A');
+    grad.addColorStop(0.45, '#3D9470');
+    grad.addColorStop(1, '#2F7A5C');
     ctx.fillStyle = grad;
     ctx.fill();
-    ctx.strokeStyle = 'rgba(61, 122, 86, 0.85)';
+    ctx.strokeStyle = 'rgba(11, 138, 143, 0.55)';
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
     // Inner wall facing the pore (slightly darker lip)
     ctx.beginPath();
     ctx.ellipse(side * rx * -0.05, 0, rx * 0.55, ry * 0.78, 0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(12, 26, 20, 0.35)';
+    ctx.fillStyle = 'rgba(47, 90, 72, 0.22)';
     ctx.fill();
 
     // Chloroplast dots
-    ctx.fillStyle = 'rgba(47, 154, 98, 0.55)';
+    ctx.fillStyle = 'rgba(47, 154, 98, 0.65)';
     for (var i = 0; i < 5; i++) {
       var a = (i / 5) * Math.PI * 2 + side * 0.4;
       var px = Math.cos(a) * rx * 0.45 + side * rx * 0.1;
@@ -310,16 +310,16 @@
     var cx = w * 0.5;
     var cy = h * 0.52;
 
-    // Background — epidermal tissue
+    // Background — warm paper epidermal tissue
     var bg = ctx.createLinearGradient(0, 0, 0, h);
-    bg.addColorStop(0, '#0c1a14');
-    bg.addColorStop(0.5, '#102018');
-    bg.addColorStop(1, '#0a1410');
+    bg.addColorStop(0, '#FBF8F1');
+    bg.addColorStop(0.5, '#F5EFE3');
+    bg.addColorStop(1, '#F0E8D8');
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, w, h);
 
     // Soft epidermal cell outlines (decorative)
-    ctx.strokeStyle = 'rgba(154, 181, 168, 0.08)';
+    ctx.strokeStyle = 'rgba(47, 122, 92, 0.14)';
     ctx.lineWidth = 1;
     var cellR = Math.min(w, h) * 0.14;
     for (var row = -1; row <= 2; row++) {
@@ -337,9 +337,9 @@
     var cavityH = 18 + a * 36;
     var cavityW = 14 + a * 52;
     var cavityGrad = ctx.createRadialGradient(cx, cy + 8, 2, cx, cy + 10, cavityW);
-    cavityGrad.addColorStop(0, 'rgba(6, 16, 12, 0.95)');
-    cavityGrad.addColorStop(0.7, 'rgba(19, 72, 48, 0.35)');
-    cavityGrad.addColorStop(1, 'rgba(16, 32, 24, 0)');
+    cavityGrad.addColorStop(0, 'rgba(58, 74, 66, 0.55)');
+    cavityGrad.addColorStop(0.7, 'rgba(47, 122, 92, 0.18)');
+    cavityGrad.addColorStop(1, 'rgba(240, 232, 216, 0)');
     ctx.fillStyle = cavityGrad;
     ctx.beginPath();
     ctx.ellipse(cx, cy + cavityH * 0.15, cavityW, cavityH, 0, 0, Math.PI * 2);
@@ -351,32 +351,32 @@
     drawGuardCell(cx, cy, rx, ry, -1, a);
     drawGuardCell(cx, cy, rx, ry, 1, a);
 
-    // Pore slit (dark opening between guards)
+    // Pore slit (ink-dark opening between guards — readable on paper)
     var poreW = 3 + a * Math.min(w * 0.12, 56);
     var poreH = ry * (0.55 + a * 0.25);
     ctx.beginPath();
     ctx.ellipse(cx, cy, poreW, poreH, 0, 0, Math.PI * 2);
     var poreGrad = ctx.createLinearGradient(cx, cy - poreH, cx, cy + poreH);
-    poreGrad.addColorStop(0, '#06100c');
-    poreGrad.addColorStop(0.5, '#020806');
-    poreGrad.addColorStop(1, '#0a1812');
+    poreGrad.addColorStop(0, '#3A4A42');
+    poreGrad.addColorStop(0.5, '#2A3530');
+    poreGrad.addColorStop(1, '#3A4A42');
     ctx.fillStyle = poreGrad;
     ctx.fill();
 
-    // Soft light rays through open pore
+    // Soft turquoise / light glow through open pore
     if (a > 0.15) {
       var glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, poreW * 3);
-      glow.addColorStop(0, 'rgba(232, 200, 74, ' + (0.08 + a * 0.12) + ')');
-      glow.addColorStop(0.5, 'rgba(107, 159, 215, ' + (0.04 + a * 0.06) + ')');
-      glow.addColorStop(1, 'rgba(232, 200, 74, 0)');
+      glow.addColorStop(0, 'rgba(11, 138, 143, ' + (0.1 + a * 0.14) + ')');
+      glow.addColorStop(0.5, 'rgba(74, 126, 184, ' + (0.05 + a * 0.07) + ')');
+      glow.addColorStop(1, 'rgba(184, 148, 46, 0)');
       ctx.fillStyle = glow;
       ctx.beginPath();
       ctx.arc(cx, cy, poreW * 3.2, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // Caption strip
-    ctx.fillStyle = 'rgba(230, 240, 234, 0.55)';
+    // Caption strip — dark ink on paper
+    ctx.fillStyle = 'rgba(26, 31, 36, 0.62)';
     ctx.font = '500 11px "IBM Plex Sans", system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(
